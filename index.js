@@ -39,14 +39,35 @@ app.get("/api/persons/:id", (req, res) => {
   else res.status(404).end();
 });
 
-app.get("/api/persons", (req, res) => {
-  res.json(persons);
-});
-
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   persons = persons.filter((p) => p.id !== id);
   res.status(204).end();
+});
+
+app.get("/api/persons", (req, res) => {
+  res.json(persons);
+});
+
+generateId = () => {
+  const max = 1000;
+  return Math.floor(Math.random() * max);
+};
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+  if (!body.number) {
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId(),
+  };
+
+  persons.concat(person);
+  console.log(person);
+  res.json(person);
 });
 
 const PORT = process.env.PORT || 3001;
