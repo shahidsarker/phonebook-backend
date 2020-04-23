@@ -2,6 +2,30 @@ const express = require("express");
 const app = express();
 
 app.use(express.json());
+const morgan = require("morgan");
+// morgan("tiny");
+morgan.token("body", (req, res) => {
+  return JSON.stringify(req.body);
+});
+
+app.use(
+  morgan("tiny", {
+    skip: (req, res) => {
+      return req.method === "POST";
+    },
+  })
+);
+
+app.use(
+  morgan(
+    ":method :url :status :response-time ms - :res[content-length] :body",
+    {
+      skip: (req, res) => {
+        return req.method !== "POST";
+      },
+    }
+  )
+);
 
 let persons = [
   {
@@ -73,7 +97,7 @@ app.post("/api/persons", (req, res) => {
   };
 
   persons.concat(person);
-  console.log(person);
+  // console.log(person);
   res.json(person);
 });
 
