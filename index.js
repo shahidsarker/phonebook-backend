@@ -101,6 +101,24 @@ app.post("/api/persons", (req, res) => {
   person.save().then((savedPerson) => res.json(savedPerson.toJSON()));
 });
 
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: "unkown endpoint" });
+};
+
+app.use(unknownEndpoint);
+
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return res.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
+
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
