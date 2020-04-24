@@ -68,7 +68,7 @@ app.get("/api/persons/:id", (req, res) => {
   else res.status(404).end();
 });
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res, next) => {
   const id = Number(req.params.id);
 
   Person.findByIdAndRemove(req.params.id)
@@ -99,6 +99,21 @@ app.post("/api/persons", (req, res) => {
   });
 
   person.save().then((savedPerson) => res.json(savedPerson.toJSON()));
+});
+
+app.put("/api/persons/:id", (req, res, next) => {
+  const body = req.body;
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(req.params.id, person, {
+    new: true,
+  })
+    .then((updatedPerson) => res.json(updatedPerson.toJSON()))
+    .catch((error) => next(error));
 });
 
 const unknownEndpoint = (req, res) => {
