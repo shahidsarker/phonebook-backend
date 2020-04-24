@@ -93,19 +93,16 @@ app.post("/api/persons", (req, res) => {
   if (!body.name) {
     return res.status(400).json({ error: "name is missing" });
   }
-  if (persons.find((p) => p.name === body.name)) {
-    return res.status(409).json({ error: "name must be unique" });
-  }
+  // if (persons.find((p) => p.name === body.name)) {
+  //   return res.status(409).json({ error: "name must be unique" });
+  // }
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
-  };
+  });
 
-  persons.concat(person);
-  // console.log(person);
-  res.json(person);
+  person.save().then((savedPerson) => res.json(savedPerson.toJSON()));
 });
 
 const PORT = process.env.PORT;
