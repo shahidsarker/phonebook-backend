@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 
@@ -5,7 +6,7 @@ app.use(express.static("build"));
 
 app.use(express.json());
 const morgan = require("morgan");
-// morgan("tiny");
+
 morgan.token("body", (req, res) => {
   return JSON.stringify(req.body);
 });
@@ -28,6 +29,8 @@ app.use(
     }
   )
 );
+
+const Person = require("./models/person");
 
 let persons = [
   {
@@ -72,7 +75,9 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Person.find({}).then((persons) =>
+    res.json(persons.map((person) => person.toJSON()))
+  );
 });
 
 generateId = () => {
@@ -103,7 +108,7 @@ app.post("/api/persons", (req, res) => {
   res.json(person);
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
