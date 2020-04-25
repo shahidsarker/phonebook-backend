@@ -10,7 +10,8 @@
     "build:ui": "rm -rf build && cd ../fso20exercises/part2/phonebook-frontend && npm run build --prod && cp -r build ../../../phonebook-backend/",
     "deploy": "git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "lint": "eslint ."
   },
   "author": "Shahid Sarker",
   "license": "MIT",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.6",
+    "eslint": "^6.8.0",
     "nodemon": "^2.0.3"
   }
 }
